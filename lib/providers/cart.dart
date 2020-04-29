@@ -15,10 +15,22 @@ class CartItem {
 }
 
 class Cart with ChangeNotifier {
-  Map<String, CartItem> _items;
+  Map<String, CartItem> _items = {};
 
   Map<String, CartItem> get items {
     return {..._items};
+  }
+
+  int get itemCount {
+    return _items.length;
+  }
+
+  double get cartTotal {
+    return _items.isEmpty
+        ? 0
+        : _items.values
+            .map<double>((item) => item.price * item.quantity)
+            .reduce((_, __) => _ + __);
   }
 
   void addItem(String productId, double price, String title) {
@@ -43,5 +55,11 @@ class Cart with ChangeNotifier {
         ),
       );
     }
+    notifyListeners();
+  }
+
+  void removeItem(id) {
+    _items.remove(id);
+    notifyListeners();
   }
 }
